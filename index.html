@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Classification</title>
+<style>
+:root{--blue:#2272B4;--blue-h:#0E538B;--ink:#11171C;--muted:#5F7281;--line:#D1D9E1;--soft:#EBEFF2;--hover:#F2F5F7;--warn:#BE501E;--ok:#277C43}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font:13px/20px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:#F7F8F9;-webkit-font-smoothing:antialiased}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+a{color:var(--blue);text-decoration:none;cursor:pointer}
+a:hover{color:var(--blue-h);text-decoration:underline}
+svg{display:block;flex-shrink:0}
+.top{height:48px;display:flex;align-items:center;padding:0 12px 0 16px;background:#fff;border-bottom:1px solid #E8ECEF}
+.brand{display:flex;align-items:center;gap:10px;width:212px}
+.brand .w{font-weight:700;font-size:17px;letter-spacing:-.3px;color:#1B3139;line-height:1}
+.brand .e{display:block;text-align:right;font-size:9px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:1px}
+.search{flex:1;max-width:620px;margin:0 auto;height:32px;border:1px solid var(--line);border-radius:4px;display:flex;align-items:center;gap:8px;padding:0 10px;color:var(--muted)}
+.search input{flex:1;border:0;outline:0;background:none}
+.tr{display:flex;align-items:center;gap:14px;margin-left:16px}
+.verify{height:28px;padding:0 12px;border-radius:14px;background:#EDF4FB;color:var(--blue)}
+.av{width:28px;height:28px;border-radius:50%;background:#1E7C5F;color:#fff;display:grid;place-items:center;font-weight:600}
+.layout{display:flex;min-height:calc(100vh - 48px)}
+nav{width:220px;flex-shrink:0;padding:8px}
+nav .h{font-size:12px;color:var(--muted);padding:14px 12px 4px}
+nav a{display:flex;align-items:center;gap:10px;height:32px;padding:0 12px;border-radius:4px;color:var(--ink)}
+nav a:hover{background:var(--hover);text-decoration:none;color:var(--ink)}
+nav a.on{background:#E8F1F9;color:var(--blue)}
+main{flex:1;min-width:0;background:#fff;border:1px solid #E3E7EB;border-radius:8px;margin:0 8px 8px 0;display:flex;flex-direction:column}
+.head{display:flex;align-items:center;gap:8px;padding:16px 16px 12px 12px}
+.ib{width:32px;height:32px;border-radius:4px;display:grid;place-items:center;color:var(--muted)}
+.ib:hover{background:var(--hover)}
+.tagic{width:32px;height:32px;border:1px solid var(--line);border-radius:4px;display:grid;place-items:center;color:var(--muted);margin-right:4px}
+h1{font-size:18px;line-height:24px;font-weight:600;margin:0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btn{height:32px;padding:0 12px;border:1px solid var(--line);border-radius:4px;background:#fff;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{background:var(--hover)}
+.btn.p{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.p:hover{background:var(--blue-h);border-color:var(--blue-h)}
+.bar{display:flex;align-items:center;gap:8px;padding:0 16px 12px;border-bottom:1px solid #E8ECEF}
+.bar b{font-weight:600}
+.src{height:24px;padding:0 8px;border-radius:4px;background:var(--soft);display:inline-flex;align-items:center;gap:6px}
+.sep{width:1px;height:16px;background:var(--line);margin:0 4px}
+.status{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.spin{width:12px;height:12px;border:1.5px solid #C9D3DC;border-top-color:var(--muted);border-radius:50%;animation:s .8s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+.cols{flex:1;display:flex;min-height:0}
+.left{flex:1;min-width:0;padding:16px 24px}
+.right{width:400px;flex-shrink:0;border-left:1px solid #E8ECEF;display:flex;flex-direction:column}
+.hint{color:var(--muted);margin-bottom:10px}
+.field{width:240px;height:32px;border:1px solid var(--line);border-radius:4px;display:flex;align-items:center;gap:8px;padding:0 10px;color:var(--muted);margin-bottom:12px}
+.field input{border:0;outline:0;flex:1;min-width:0;background:none}
+.filter{display:flex;align-items:center;gap:8px;margin-bottom:10px;color:var(--muted)}
+table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #E3E7EB;border-radius:4px;table-layout:fixed}
+th{text-align:left;font-weight:600;padding:8px 12px;border-bottom:1px solid #E3E7EB}
+th small{font-weight:400;color:var(--muted);margin-left:6px;font-size:12px}
+td{padding:8px 12px;border-bottom:1px solid #EEF1F3;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#F9FAFB}
+td.in a{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 6px;border-radius:4px;background:var(--soft);font-size:12px;white-space:nowrap}
+.runs{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.runs .arrow{color:var(--muted)}
+.conf{color:var(--muted);font-size:12px;margin-left:6px;font-variant-numeric:tabular-nums}
+.conf.low{color:var(--warn)}
+.cfg{display:flex;align-items:center;gap:8px;padding:16px 16px 12px}
+.cfg b{font-weight:600;font-size:14px}
+.vtag{font-size:12px;padding:0 6px;height:20px;line-height:20px;border-radius:4px;background:#E9F5EC;color:var(--ok)}
+.tools{display:flex;align-items:center;gap:12px;padding:0 16px 8px}
+.tools .field{flex:1;width:auto;margin:0;min-width:0}
+.tools a{white-space:nowrap}
+.labels{padding:4px 16px 16px;overflow:auto}
+.lab{margin-top:14px}
+.lab label{display:block;font-weight:600;margin-bottom:6px}
+textarea{width:100%;min-height:56px;border:1px solid var(--line);border-radius:4px;padding:6px 10px;resize:vertical;line-height:20px}
+textarea:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+textarea::placeholder{color:#8A9BA8}
+.note{display:flex;gap:6px;margin-top:6px;font-size:12px;line-height:18px;color:var(--muted)}
+.note svg{margin-top:2px}
+.note.w{color:var(--ink)}
+.dim{position:fixed;inset:0;background:rgba(17,23,28,.5);display:flex;align-items:flex-start;justify-content:center;padding-top:12vh;z-index:5}
+.dlg{width:520px;max-width:calc(100% - 32px);background:#fff;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.dh{display:flex;align-items:center;padding:20px 24px 8px}
+.dh h2{flex:1;margin:0;font-size:18px;line-height:24px;font-weight:600}
+.db{padding:8px 24px 0}
+.opt{display:flex;gap:10px;padding:12px;border:1px solid var(--line);border-radius:4px;margin-bottom:8px;cursor:pointer}
+.opt:hover{border-color:#A9B6C1}
+.opt.on{border-color:var(--blue)}
+.opt input{margin:3px 0 0;accent-color:var(--blue)}
+.opt b{display:block;font-weight:600}
+.opt span{color:var(--muted)}
+.ready{margin-top:16px;border-top:1px solid #EEF1F3;padding-top:12px}
+.ready .k{font-weight:600;margin-bottom:6px}
+.kv{display:grid;grid-template-columns:1fr auto;row-gap:4px;color:var(--muted)}
+.kv span:nth-child(even){color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
+.kv span.bad{color:var(--warn)}
+.flag{display:flex;align-items:center;gap:6px;margin-top:10px}
+.chk{display:flex;align-items:center;gap:8px;margin-top:12px;cursor:pointer}
+.chk input{accent-color:var(--blue)}
+.df{display:flex;justify-content:flex-end;gap:8px;padding:20px 24px}
+.new{outline:1.5px dashed #F08C00;outline-offset:4px;border-radius:2px}
+.new-i{outline:1.5px dashed #F08C00;outline-offset:1px;border-radius:2px;font-style:normal;padding:0 3px;margin-left:2px}
+.legend{position:fixed;left:16px;bottom:16px;width:196px;background:#fff;border:1px solid #E3E7EB;border-radius:6px;padding:10px 12px;font-size:12px;line-height:17px;color:var(--muted);z-index:4}
+.legend b{color:var(--ink);font-weight:600}
+.swatch{display:inline-block;width:14px;height:10px;outline:1.5px dashed #F08C00;outline-offset:-1px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+@keyframes ring{0%{box-shadow:0 0 0 0 rgba(34,114,180,.55)}70%{box-shadow:0 0 0 8px rgba(34,114,180,0)}100%{box-shadow:0 0 0 0 rgba(34,114,180,0)}}
+.cue{animation:ring 1.8s ease-out infinite}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#11171C;color:#fff;border-radius:4px;padding:10px 14px;display:flex;gap:16px;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.toast a{color:#8FC1EE}
+@media (max-width:1180px){nav{display:none}.right{width:340px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 21 8 12 13 3 8Z" fill="#FF3621"/><path d="M3 12.2l9 5 9-5M3 16.4l9 5 9-5" stroke="#FF3621" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
+    <div><span class="w">databricks</span><span class="e">Free Edition</span></div>
+  </div>
+  <label class="search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input placeholder="Search data, notebooks, recents, and more..." aria-label="Search"><span style="font-size:12px">⌘ + P</span></label>
+  <div class="tr"><button class="verify">Verify identity</button><span>workspace</span><div class="av">N</div></div>
+</header>
+<div class="layout">
+  <nav id="nav"></nav>
+  <main id="main"></main>
+</div>
+<div id="layer"></div>
+<div class="legend"><span class="swatch"></span><b>Proposed changes</b><br>Orange boxes mark what's new. Click <b>Use Agent</b> to see the deploy step.</div>
+
+<script>
+const ICON = {
+  back:'M15 6l-6 6 6 6', tag:'M3 12V4h8l10 10-8 7zM7.5 8h.01', more:'', clock:'M4 12a8 8 0 108-8 8 8 0 00-6 3M4 4v3h3M12 8v4l3 2',
+  table:'M3 5h18v14H3zM3 10h18M9 10v9', plus:'M12 5v14M5 12h14', gear:'M12 15a3 3 0 100-6 3 3 0 000 6zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1',
+  search:'M11 18a7 7 0 100-14 7 7 0 000 14zM20 20l-3.5-3.5', sliders:'M7 4v16M17 4v16M4 9h6M14 15h6', edit:'M4 20h4L19 9l-4-4L4 16zM14 6l4 4',
+  warn:'M12 3l9.5 17H2.5zM12 10v4M12 17v.5', check:'M5 12l5 5 9-10', x:'M6 6l12 12M18 6L6 18'
+};
+const svg = (d, s=16, c='currentColor') => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+const dots = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>`;
+
+const NAV = [['Marketplace','M4 9h16l-1-4H5zM5 9v10h14V9'],['h','SQL'],['SQL Editor','M4 5h16v14H4zM8 10l2 2-2 2M12 14h4'],['Queries','M6 3h9l3 3v15H6z'],
+ ['Dashboards','M4 4h7v7H4zM13 4h7v4h-7zM13 10h7v10h-7zM4 13h7v7H4z'],['Genie Agents','M4 6h12v10H8l-4 3z'],['Alerts','M6 16v-5a6 6 0 0112 0v5l2 2H4zM10 20h4'],
+ ['Query History',ICON.clock],['SQL Warehouses','M6 17a4 4 0 01-.5-8A6 6 0 0117 8a4.5 4.5 0 01.5 9z'],['h','Data Engineering'],['Runs','M4 6h2M9 6h11M4 12h2M9 12h11M4 18h2M9 18h11'],
+ ['Data Ingestion','M12 4v11M7 10l5 5 5-5M5 20h14'],['Visual Data Prep','M4 4h6v6H4zM14 14h6v6h-6zM10 7h4v10'],['h','AI/ML'],['Playground','M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z'],
+ ['Agents','M12 12a4 4 0 100-8 4 4 0 000 8zM5 20a7 7 0 0114 0'],['AI Gateway','M3 12h4l3-7 4 14 3-7h4'],['Experiments','M9 3h6M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3'],
+ ['Features','M4 4h10v10H4zM10 10h10v10H10z'],['Models','M12 3l8 4.5v9L12 21l-8-4.5v-9z'],['Serving','M5 17a4 4 0 01-.5-8A6 6 0 0116 8a4.5 4.5 0 011 9zM12 13v6']];
+document.getElementById('nav').innerHTML = NAV.map(([a,b]) => a==='h' ? `<div class="h">${b}</div>` : `<a class="${a==='Agents'?'on':''}">${svg(b)}${a}</a>`).join('');
+
+const ROWS = [
+  {t:'**4.5/5 stars** I stumbled upon Bakehouse in the charming streets of Kagoshima', l:'positive', c:[.92,.93]},
+  {t:"Title: A Sweet Escape in Las Vegas' Arts District Bakehouse", l:'positive', c:[.85,.86]},
+  {t:'"Sweet tooth heaven on East 6th Street! I\'m obsessed with their', l:'mixed', c:[.62,.81]},
+  {t:'Title: A Delightful Cookie Experience at Bakehouse in Denver', l:'positive', c:[.78,.80]},
+  {t:'Bakehouse in Fitzroy, Melbourne, has disappointed me again', l:'negative', c:[.84,.86]}
+];
+const UNSTABLE = [
+  {t:'Oatmeal cookies were chewy and great, but the line was painfully slow', r:['positive','mixed','positive'], c:.58},
+  {t:'Great biscotti. Really wish they had more seating inside', r:['positive','mixed','mixed'], c:.61},
+  {t:'Underwhelming visit, though the cookies themselves were fine', r:['negative','mixed','negative'], c:.64}
+];
+const SUGGEST = 'Mentions at least one specific positive and one specific negative. If one side clearly dominates, use positive or negative instead.';
+
+const S = { phase:'checking', fixed:false, filter:false, dialog:false, mode:'pipe', route:true, toast:false, mixed:'' };
+let t;
+function check(){ clearTimeout(t); S.phase='checking'; render(); t=setTimeout(()=>{ S.phase='done'; render(); }, 2000); }
+const issues = () => S.phase==='done' && !S.fixed;
+const v = () => S.fixed ? 'v2' : 'v1';
+
+function statusText(){
+  if (S.phase==='checking') return `<span class="status"><span class="spin"></span>Checking stability</span>`;
+  if (issues()) return `<span class="status">${svg(ICON.warn,14,'#BE501E')}<a data-a="filter">3 rows change label between runs</a></span>`;
+  return `<span class="status">${svg(ICON.check,14,'#277C43')}Stable across 3 runs</span>`;
+}
+
+function tableHTML(){
+  if (S.filter && issues()) {
+    return `<div class="filter">Showing 3 of 50 sample rows that changed label across 3 runs. <a data-a="unfilter">Show all</a></div>
+    <table><colgroup><col><col style="width:260px"></colgroup>
+    <thead><tr><th>Input<small>Text and Markdown</small></th><th>Runs 1, 2, 3</th></tr></thead>
+    <tbody>${UNSTABLE.map(u=>`<tr><td class="in"><a>${u.t}</a></td><td><div class="runs">${u.r.map(x=>`<span class="tag">${x}</span>`).join('')}<span class="conf low">${u.c.toFixed(2)}</span></div></td></tr>`).join('')}</tbody></table>`;
+  }
+  const i = S.fixed ? 1 : 0;
+  return `<table><colgroup><col><col style="width:220px"></colgroup>
+    <thead><tr><th>Input<small>Text and Markdown</small></th><th>Agent Response</th></tr></thead>
+    <tbody>${ROWS.map(r=>`<tr><td class="in"><a>${r.t}</a></td><td><span class="tag">${r.l}</span><span class="conf ${r.c[i]<.7?'low':''}">${r.c[i].toFixed(2)}</span></td></tr>`).join('')}</tbody></table>`;
+}
+
+function labelsHTML(){
+  return ['positive','negative','mixed','off topic'].map(n=>{
+    const isMixed = n==='mixed';
+    let note = '';
+    if (isMixed && issues()) note = `<div class="note w new">${svg(ICON.warn,14,'#BE501E')}<span>Causes all 3 unstable rows. ${S.mixed ? '<a data-a="rerun">Run classification</a> to re-check.' : '<a data-a="suggest">Use suggested description</a>'}</span></div>`;
+    if (isMixed && S.fixed && S.phase==='done') note = `<div class="note new">${svg(ICON.check,14,'#277C43')}<span>Stable across 3 runs</span></div>`;
+    const val = isMixed ? S.mixed : '';
+    return `<div class="lab"><label for="l-${n}">${n}</label><textarea id="l-${n}" data-l="${n}" ${val?'style="min-height:84px"':''} placeholder="Describe when this label should be applied">${val}</textarea>${note}</div>`;
+  }).join('');
+}
+
+function main(){
+  return `
+  <div class="head">
+    <button class="ib" aria-label="Back">${svg(ICON.back)}</button>
+    <div class="tagic">${svg(ICON.tag)}</div>
+    <h1>classify-customer_reviews-2026-10-26-11-16-49</h1>
+    <button class="ib" aria-label="More">${dots}</button>
+    <button class="btn">${svg(ICON.clock,15)}Versions</button>
+    <button class="btn p ${S.opened?'':'cue'}" data-a="use">Use Agent</button>
+  </div>
+  <div class="bar">
+    <b>Rows</b><span class="src">${svg(ICON.table,14)}customer_reviews</span>
+    <a style="display:flex;align-items:center;gap:4px">${svg(ICON.plus,14)}Add Row</a>
+    <span class="sep"></span><span style="color:var(--muted)">5 rows</span>
+    <span style="flex:1"></span><span class="new" style="margin-right:6px">${statusText()}</span>
+    <button class="ib" aria-label="Settings">${svg(ICON.gear)}</button>
+  </div>
+  <div class="cols">
+    <section class="left">
+      ${S.filter && issues() ? '' : `<div class="hint">Select a row to review.</div><label class="field">${svg(ICON.search,14)}<input placeholder="Search input" aria-label="Search input"></label>`}
+      ${tableHTML()}
+    </section>
+    <aside class="right">
+      <div class="cfg"><b>Configuration</b><span class="vtag">${v()}</span><span style="flex:1"></span><button class="ib" aria-label="Options">${svg(ICON.sliders)}</button><button class="btn" data-a="rerun">Run classification</button></div>
+      <div class="tools"><label class="field">${svg(ICON.search,14)}<input placeholder="Search labels" aria-label="Search labels"></label><a style="display:flex;align-items:center;gap:4px">${svg(ICON.plus,14)}Add label</a><a style="display:flex;align-items:center;gap:4px">${svg(ICON.edit,14)}Instructions</a></div>
+      <div class="labels">${labelsHTML()}</div>
+    </aside>
+  </div>`;
+}
+
+function dialog(){
+  if (!S.dialog) return '';
+  const fixed = S.fixed && S.phase==='done';
+  const checking = S.phase==='checking';
+  const rows = checking
+    ? `<div class="status"><span class="spin"></span>Checking stability on 50 sample rows</div>`
+    : `<div class="kv">
+        <span>Labels stable across 3 runs</span><span class="${fixed?'':'bad'}">${fixed?'49 of 50':'47 of 50'}</span>
+        <span>Rows below 0.70 confidence</span><span class="${fixed?'':'bad'}">${fixed?'7%':'18%'}</span>
+      </div>${fixed?'':`<div class="flag">${svg(ICON.warn,14,'#BE501E')}<span>Unstable rows all involve "mixed".</span><a data-a="review">Review</a></div>`}`;
+  const est = fixed ? '$0.85 to $1.25' : '$0.80 to $1.20';
+  return `<div class="dim" data-a="close"><div class="dlg" role="dialog" aria-label="Use agent" data-in>
+    <div class="dh"><h2>Use agent</h2><button class="ib" aria-label="Close" data-a="close">${svg(ICON.x)}</button></div>
+    <div class="db">
+      <label class="opt ${S.mode==='sql'?'on':''}"><input type="radio" name="m" data-a="sql" ${S.mode==='sql'?'checked':''}><div><b>Run in SQL</b><span>Classify all 10,000 rows once. <em class="new-i">Est. ${est}.</em></span></div></label>
+      <label class="opt ${S.mode==='pipe'?'on':''}"><input type="radio" name="m" data-a="pipe" ${S.mode==='pipe'?'checked':''}><div><b>Create a Lakeflow pipeline</b><span>Classify new rows on a schedule. <em class="new-i">Est. $0.10 to $0.15 per run.</em></span></div></label>
+      <div class="new" style="margin-top:16px;padding:10px 12px;outline-offset:0"><div class="ready" style="margin-top:0;border-top:0;padding-top:0"><div class="k">Readiness</div>${rows}</div>
+      <label class="chk"><input type="checkbox" data-a="route" ${S.route?'checked':''}>Send rows below 0.70 confidence to a review table</label></div>
+    </div>
+    <div class="df"><button class="btn" data-a="close">Cancel</button><button class="btn p" data-a="deploy">${S.mode==='sql'?'Run in SQL':'Create pipeline'}</button></div>
+  </div></div>`;
+}
+
+function toast(){
+  if (!S.toast) return '';
+  return `<div class="toast"><span>${S.mode==='sql'?'Query opened in SQL editor':'Pipeline created'}. First run est. ${S.mode==='sql'?(S.fixed?'$0.85 to $1.25':'$0.80 to $1.20'):'$0.10 to $0.15'}.</span><a data-a="restart">Restart</a></div>`;
+}
+
+function render(){
+  document.getElementById('main').innerHTML = main();
+  document.getElementById('layer').innerHTML = dialog() + toast();
+}
+
+const A = {
+  filter(){ S.filter=true }, unfilter(){ S.filter=false },
+  suggest(){ S.mixed=SUGGEST; setTimeout(()=>{ const ta=document.querySelector('[data-l="mixed"]'); if(ta){ ta.focus(); ta.setSelectionRange(ta.value.length,ta.value.length);} }) },
+  rerun(){ if (S.mixed.trim()) { S.fixed=true; S.filter=false; } check(); },
+  use(){ S.dialog=true; S.opened=true }, close(){ S.dialog=false },
+  review(){ S.dialog=false; S.filter=true },
+  sql(){ S.mode='sql' }, pipe(){ S.mode='pipe' }, route(){ S.route=!S.route },
+  deploy(){ S.dialog=false; S.toast=true },
+  restart(){ Object.assign(S,{fixed:false,filter:false,dialog:false,toast:false,mixed:''}); check(); }
+};
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-a]'); if (!el) return;
+  if (el.dataset.a==='close' && e.target.closest('[data-in]') && !e.target.closest('.dh,.df')) return;
+  A[el.dataset.a] && (A[el.dataset.a](), render());
+});
+document.addEventListener('input', e => { if (e.target.dataset.l==='mixed') S.mixed = e.target.value; });
+document.addEventListener('keydown', e => { if (e.key==='Escape' && S.dialog) { S.dialog=false; render(); } });
+check();
+</script>
+</body>
+</html>
